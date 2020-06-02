@@ -21,3 +21,14 @@ $router->get('/', function () use ($router) {
 $router->get('/key', function () {
     return \Illuminate\Support\Str::random(64);
 });
+
+// Users group
+$router->group(['prefix' => 'users'], function () use ($router) {
+    $router->get('/', 'UsersController@index');
+    $router->post('/add', 'UsersController@add');
+    $router->get('/find', 'UsersController@findByEmail');
+    $router->put('/update', 'UsersController@update');
+    $router->delete('/delete', 'UsersController@delete');
+    $router->get('/count', 'UsersController@count');
+    $router->get('/status/count', 'UsersController@countStatus');
+});

@@ -2,11 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Http\Helpers\ResponseBuilder;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -49,6 +52,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof NotFoundHttpException) {
+            return ResponseBuilder::response('failed', 'not found', null, 404);
+        } else if ($exception instanceof MethodNotAllowedHttpException) {
+            return ResponseBuilder::response('failed', 'method not allowed', null, 405);
+        }
+
         return parent::render($request, $exception);
     }
 }
