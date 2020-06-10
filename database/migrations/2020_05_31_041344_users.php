@@ -15,15 +15,15 @@ class Users extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('chat_id')->unique();
+            $table->bigInteger('chat_id')->unique();
             $table->string('firstname', 128);
             $table->string('lastname', 128)->nullable();
             $table->string('username', 128)->nullable();
-            $table->string('email', 128)->nullable()->unique();
+            $table->string('email')->unique()->nullable();
             $table->decimal('balance', 12, 2)->default(0.0);
             $table->integer('point')->default(0);
             $table->integer('activation_code')->nullable();
-            $table->boolean('is_activated')->default(false);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

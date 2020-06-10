@@ -61,6 +61,7 @@ class UsersController extends Controller
         $data->firstname = $request->input('firstname');
         $data->lastname = $request->input('lastname');
         $data->username = $request->input('username');
+        $data->email = $request->input('email');
         $data->balance = $request->input('balance', 0);
         $data->point = $request->input('point', 0);
         $data->is_active = $request->input('is_active', false);
