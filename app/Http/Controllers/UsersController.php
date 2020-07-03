@@ -9,15 +9,6 @@ use Illuminate\Http\Request;
 class UsersController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Get users
      */
     public function index()
@@ -28,21 +19,19 @@ class UsersController extends Controller
     }
 
     /**
-     * Get user by email
+     * Get user by id
      * 
-     * @param string $email
+     * @param string $id
      */
-    public function findByEmail(Request $request)
+    public function find($id)
     {
-        $email = $request->input('email');
+        $result = UsersModel::find($id);
 
-        $result = UsersModel::where(['email' => $email])->first();
+        $msg = !is_null($result) ? '' : 'user not found';
 
-        if (!$result) {
-            return ResponseBuilder::response('failed', 'email not found', null, 404);
-        }
+        $status = !is_null($result) ? 'success' : 'failed';
 
-        return ResponseBuilder::response('success', '', $result, 200);
+        return ResponseBuilder::response($status, $msg, $result, 200);
     }
 
     /**
@@ -53,16 +42,16 @@ class UsersController extends Controller
         $data = new UsersModel();
 
         $this->validate($request, [
-            'chat_id' => 'required',
-            'firstname' => 'required'
+            'tele_chat_id' => 'required|unique:users',
+            'firstname' => 'required',
+            'email' => 'email|unique:users',
         ]);
 
-        $data->chat_id = $request->input('chat_id');
+        $data->tele_chat_id = $request->input('tele_chat_id');
         $data->firstname = $request->input('firstname');
         $data->lastname = $request->input('lastname');
         $data->username = $request->input('username');
         $data->email = $request->input('email');
-        $data->balance = $request->input('balance', 0);
         $data->point = $request->input('point', 0);
         $data->is_active = $request->input('is_active', false);
 
@@ -75,15 +64,18 @@ class UsersController extends Controller
     }
 
     /**
-     * Update user by email
+     * Update user by id
      * 
-     * @param string $email
+     * @param int $id
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $email = $request->input('email');
+        $user = UsersModel::find($id);
 
-        $user = UsersModel::where('email', $email)->first();
+        $this->validate($request, [
+            'email' => 'email|required',
+            'firstname' => 'required'
+        ]);
 
         if ($user) {
             $user->update($request->all());
@@ -91,22 +83,20 @@ class UsersController extends Controller
             return ResponseBuilder::response('success', 'user successfully updated', $user, 200);
         }
 
-        return ResponseBuilder::response('failed', 'email not found', null, 404);
+        return ResponseBuilder::response('failed', 'user not found', null, 200);
     }
 
     /**
-     * Delete user by email
+     * Delete user by id
      * 
-     * @param string $email
+     * @param int $id
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        $email = $request->input('email');
-
-        $data = UsersModel::where('email', $email)->first();
+        $data = UsersModel::find($id);
 
         if (!$data) {
-            return ResponseBuilder::response('failed', 'email not found', null, 404);
+            return ResponseBuilder::response('failed', 'user not found', null, 200);
         }
 
         $data->delete();
