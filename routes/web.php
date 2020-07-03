@@ -23,12 +23,12 @@ $router->get('/key', function () {
 });
 
 // Users group
-$router->group(['prefix' => 'users'], function () use ($router) {
-    $router->get('/', 'UsersController@index');
+$router->group(['prefix' => 'user'], function () use ($router) {
+    $router->get('/list', 'UsersController@index');
     $router->post('/add', 'UsersController@add');
-    $router->get('/find', 'UsersController@findByEmail');
-    $router->put('/update', 'UsersController@update');
-    $router->delete('/delete', 'UsersController@delete');
+    $router->get('/find/{id}', 'UsersController@find');
+    $router->put('/update/{id}', 'UsersController@update');
+    $router->delete('/delete/{id}', 'UsersController@delete');
     $router->get('/count', 'UsersController@count');
-    $router->get('/status/count', 'UsersController@countStatus');
+    $router->get('/count/status', 'UsersController@countStatus');
 });

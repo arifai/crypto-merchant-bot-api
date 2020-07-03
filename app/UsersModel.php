@@ -20,6 +20,6 @@ class UsersModel extends Model
      * @var array
      */
     protected $fillable = [
-        'chat_id', 'firstname', 'lastname', 'username', 'email', 'balance', 'point', 'is_active'
+        'tele_chat_id', 'firstname', 'lastname', 'username', 'email', 'point', 'is_active'
     ];
 }
